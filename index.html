@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=
+    , initial-scale=1.0"
+    />
+    <title>CRUD operation</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/icomoonstyle.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="main text-white container-fluid min-vh-100 d-flex justify-content-center align-items-center align-content-center pt-5">
+      <div class="caption  w-75  mb-4 shadow-lg text-black d-flex justify-content-center align-items-center align-content-center flex-column ">
+
+<div class="w-100  justify-content-center align-items-center flex-column align-content-center">
+<header class="header text-center ">
+  <h1 class="mt-4 ">Bookmarker</h1>
+  <div class="dotsLine m-5"></div>
+<h2><span class="icon-bookmark"></span> Bookmark your favorite sites<span class="icon-bookmark"></span></h2></header>
+<div class="form-group m-3">
+  <span class="icon-save"></span><label for="webName">Site Name</label>
+  <input type="text" name="webName" id="webName" class="form-control rounded-3" placeholder="Bookmarker Name"/>
+</div>
+<div class="form-group m-3 ">
+  <span class="icon-chain"></span> <label for="webUrl">Site URL</label>
+  <input type="url" name="webUrl" id="webUrl" placeholder="website URL" class="form-control rounded-3 "/>
+</div>
+<div class="btn-submit text-center">
+<button class="btn btn-danger m-3 " id="submitBtn" onclick="addBookmark()">submit</button>
+</div>
+<div class="dotsLine m-2"></div>
+</div>
+
+<table class=" mx-auto py-4 table table-light table-striped" >
+  <thead>
+    <th>index</th>
+    <th>WebSite Name</th>
+    <th>visit</th>
+    <th>Delete</th>
+  </thead>
+  <tbody id="mybody">
+    
+  </tbody>
+</table>  
+</div>
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
