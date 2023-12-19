@@ -1,159 +1,104 @@
 // declaration variables
-var webName=document.getElementById("webName");
-var webUrl=document.getElementById("webUrl");
-var mybody=document.getElementById("mybody");
+const bookmarkNameInput = document.getElementById("bookmarkName");
+const bookmarkURLInput = document.getElementById("bookmarkURL");
 
-var bookMarkList;
+let bookmarkList = [];
 
-
-
-var siteName = document.getElementById("webName");
-var siteURL = document.getElementById("webUrl");
-var submitBtn = document.getElementById("submitBtn");
-var tableContent = document.getElementById("mybody");
-var deleteBtns;
-var visitBtns;
-var bookmarks = [];
-
-
-// &&&&&&&&&&&&& get data from local store
-
-if (localStorage.getItem("bookmarksList")) {
-  bookmarks = JSON.parse(localStorage.getItem("bookmarksList"));
-  for (var i = 0; i < bookmarks.length; i++) {
-    displayBookmark(i);
-  }
+if (localStorage.getItem("Bookmarks") != null) {
+  bookmarkList = JSON.parse(localStorage.getItem("Bookmarks"));
+  displayBookmarks(bookmarkList);
 }
 
-//^add bookmark
-function displayBookmark(index) {
-  var userURL = bookmarks[index].siteURL;
-  var protocolRegex = /^https?:\/\//g;
-  if (protocolRegex.test(userURL)) {
-    validURL = userURL;
-    fixedURL = validURL
-      .split("")
-      .splice(validURL.match(protocolRegex)[0].length)
-      .join("");
-  } else {
-    var fixedURL = userURL;
-    validURL = `https://${userURL}`;
-  }
-  var newBookmark = `
-              <tr>
-                <td>${index + 1}</td>
-                <td>${bookmarks[index].siteName}</td>              
-                <td>
-                  <button class="btn btn-visit" data-index="${index}">
-                    <i class="fa-solid fa-eye pe-2"></i>Visit
-                  </button>
-                </td>
-                <td>
-                  <button class="btn btn-delete pe-2" data-index="${index}">
-                    <i class="fa-solid fa-trash-can"></i>
-                    Delete
-                  </button>
-                </td>
-            </tr>
-            `;
-  tableContent.innerHTML += newBookmark;
+function addBookmark() {
+  let bookmark = {
+    siteName: bookmarkNameInput.value,
+    siteURL: bookmarkURLInput.value,
+  };
 
-  deleteBtns = document.querySelectorAll(".btn-delete");
-  if (deleteBtns) {
-    for (var j = 0; j < deleteBtns.length; j++) {
-      deleteBtns[j].addEventListener("click", function (e) {
-        deleteBookmark(e);
-      });
-    }
-  }
-
-  visitBtns = document.querySelectorAll(".btn-visit");
-  if (visitBtns) {
-    for (var l = 0; l < visitBtns.length; l++) {
-      visitBtns[l].addEventListener("click", function (e) {
-        visitWeb(e);
-      });
-    }
-  }
-}
-// &&&&&clear 
-function clearInput() {
-  siteName.value = "";
-  siteURL.value = "";
-}
-
-// function DeleteBookMark(index)
-// {
-//   bookMarkList.splice(index,1);
-// AddLocalStorage();
-// displayBookMark(bookMarkList);
-
-// }
-// =====> Delete Function
-
-function deleteBookmark(e) {
-  tableContent.innerHTML = "";
-  var deletedIndex = e.target.dataset.index;
-  bookmarks.splice(deletedIndex, 1);
-  for (var k = 0; k < bookmarks.length; k++) {
-    displayBookmark(k);
-  }
-  localStorage.setItem("bookmarksList", JSON.stringify(bookmarks));
-}
-
-//*****************save in loacalstrorage */
-function AddLocalStorage()
-{
-  localStorage.setItem("bookMarkList",JSON.stringify(bookMarkList))
-}
-//$$$$$$$$$$$submite new bookmark$$$$$$$$$$$$$4
-submitBtn.addEventListener("click", function () {
-  if (
-    siteName.classList.contains("is-valid") &&
-    siteURL.classList.contains("is-valid")
-  ) {
-    var bookmark = {
-      siteName:siteName.value,
-      siteURL: siteURL.value,
-    };
-    bookmarks.push(bookmark);
-    localStorage.setItem("bookmarksList", JSON.stringify(bookmarks));
-    displayBookmark(bookmarks.length - 1);
-    clearInput();
-    siteName.classList.remove("is-valid");
-    siteURL.classList.remove("is-valid");
+  if (isBookmarkNameUnique(bookmark.siteName)) {
+    if (isValidName(bookmark.siteName) && isValidURL(bookmark.siteURL)) {
+      bookmarkList.push(bookmark);
+      localStorage.setItem("Bookmarks", JSON.stringify(bookmarkList));
+      displayBookmarks(bookmarkList);
+      clearForm();
+      console.log(bookmarkList);
+    } 
   } 
-});
-//&&&&&&&&&visit &&&&&&&&&&&
-function visitWeb(e) {
-  var webIndex = e.target.dataset.index;
-  var httpsRegex = /^https?:\/\//;
-  if (httpsRegex.test(bookmarks[webIndex].siteURL)) {
-    open(bookmarks[webIndex].siteURL);
+}
+
+function isBookmarkNameUnique(name) {
+  return !bookmarkList.some((bookmark) => bookmark.siteName === name);
+}
+
+function isValidName(name) {
+  const validName = /^\w{3,}(\s+\w+)*$/;
+  return validName.test(name);
+}
+
+function isValidURL(url) {
+  const pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))" + // domain name or IP address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return pattern.test(url);
+}
+
+function validNameInput() {
+  if (isValidName(bookmarkNameInput.value)) {
+    bookmarkNameInput.classList.remove("is-invalid");
+    bookmarkNameInput.classList.add("is-valid");
   } else {
-    open(`https://${bookmarks[webIndex].siteURL}`);
+    bookmarkNameInput.classList.remove("is-valid");
+    bookmarkNameInput.classList.add("is-invalid");
   }
 }
 
-// !!!!!!!!validation!!!!!!!!!!!
-var nameRegex = /^\w{3,}(\s+\w+)*$/;
-var urlRegex = /^(https?:\/\/)?(w{3}\.)?\w+\.\w{2,}\/?(:\d{2,5})?(\/\w+)*$/;
-
-siteName.addEventListener("input", function () {
-  validate(siteName, nameRegex);
-});
-
-siteURL.addEventListener("input", function () {
-  validate(siteURL, urlRegex);
-});
-
-function validate(element, regex) {
-  var testRegex = regex;
-  if (testRegex.test(element.value)) {
-    element.classList.add("is-valid");
-    element.classList.remove("is-invalid");
+function validURLInput() {
+  if (isValidURL(bookmarkURLInput.value)) {
+    bookmarkURLInput.classList.remove("is-invalid");
+    bookmarkURLInput.classList.add("is-valid");
   } else {
-    element.classList.add("is-invalid");
-    element.classList.remove("is-valid");
+    bookmarkURLInput.classList.remove("is-valid");
+    bookmarkURLInput.classList.add("is-invalid");
   }
+}
+
+function clearForm() {
+  bookmarkNameInput.value = "";
+  bookmarkURLInput.value = "";
+}
+
+function displayBookmarks(bookmarkList) {
+  let tableContent = ``;
+  for (let i = 0; i < bookmarkList.length; i++) {
+    tableContent += `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${bookmarkList[i].siteName}</td>
+      <td><button class="btn btn-outline-main" onclick="visitWebsite(${i});"><i class="fa-solid fa-eye"></i> Visit</button></td>
+      <td><button class="btn btn-outline-main" onclick="deleteBookmark(${i});"><i class="fa-solid fa-trash-can"></i> Delete</button></td>
+    </tr>
+        `;
+  }
+
+  document.getElementById("bookmarkContent").innerHTML = tableContent;
+}
+
+function visitWebsite(i) {
+  const httpRegEx = /^https?:\/\//;
+  if (httpRegEx.test(bookmarkList[i].siteURL)) {
+    window.open(bookmarkList[i].siteURL);
+  } else {
+    window.open(`https://${bookmarkList[i].siteURL}`);
+  }
+}
+
+function deleteBookmark(i) {
+  bookmarkList.splice(i, 1);
+  localStorage.setItem("Bookmarks", JSON.stringify(bookmarkList));
+  displayBookmarks(bookmarkList);
 }

@@ -21,31 +21,59 @@
   <h1 class="mt-4 ">Bookmarker</h1>
   <div class="dotsLine m-5"></div>
 <h2><span class="icon-bookmark"></span> Bookmark your favorite sites<span class="icon-bookmark"></span></h2></header>
-<div class="form-group m-3">
+<!-- <div class="form-group m-3">
   <span class="icon-save"></span><label for="webName">Site Name</label>
-  <input type="text" name="webName" id="webName" class="form-control rounded-3" placeholder="Bookmarker Name"/>
+ 
+  <input type="text" oninput="validNameInput();" name="webName" id="webName" class="form-control rounded-3" placeholder="Bookmarker Name"/>
+</div> -->
+<div class="input w-100">
+  <label for="bookmarkName"
+    ><span class="icon-save"> Name</label
+  >
+  <input
+    type="text"
+    id="bookmarkName"
+    class="form-control mt-2"
+    placeholder="Bookmark Name"
+    oninput="validNameInput();"
+  />
 </div>
-<div class="form-group m-3 ">
+<!-- <div class="form-group m-3 ">
   <span class="icon-chain"></span> <label for="webUrl">Site URL</label>
-  <input type="url" name="webUrl" id="webUrl" placeholder="website URL" class="form-control rounded-3 "/>
+  <input type="url" name="webUrl" oninput="validURLInput()" id="webUrl" placeholder="website URL" class="form-control rounded-3 "/>
+</div> -->
+<div class="input pt-3 w-100">
+  <label for="bookmarkURL"
+    ><span class="icon-chain"></span></i> URL</label
+  >
+  <input
+    type="text"
+    id="bookmarkURL"
+    class="form-control mt-2"
+    placeholder="Website URL"
+    oninput="validURLInput()"
+  />
 </div>
 <div class="btn-submit text-center">
-<button class="btn btn-danger m-3 " id="submitBtn" onclick="addBookmark()">submit</button>
-</div>
+  <button onclick="addBookmark();" class="btn btn-main mt-4 px-4">
+    Add bookmark
+  </button></div>
 <div class="dotsLine m-2"></div>
 </div>
 
-<table class=" mx-auto py-4 table table-light table-striped" >
-  <thead>
-    <th>index</th>
-    <th>WebSite Name</th>
-    <th>visit</th>
-    <th>Delete</th>
-  </thead>
-  <tbody id="mybody">
-    
-  </tbody>
-</table>  
+<section id="displayTable" class="content-adjust pt-2 px-3 px-sm-5 w-100">
+  <table class="table text-center ">
+    <thead>
+      <tr>
+        <th>Index</th>
+        <th>Website Name</th>
+        <th>Visit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody id="bookmarkContent"></tbody>
+  </table>
+</section>
 </div>
     </div>
     <script src="js/bootstrap.bundle.min.js"></script>
